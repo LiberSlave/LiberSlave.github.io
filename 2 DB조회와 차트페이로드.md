@@ -1,0 +1,454 @@
+
+
+## DB에서 데이터 query
+
+```python
+@contextmanager
+
+def get_db_connection():
+
+    """DB 연결을 안전하게 관리하는 context manager"""
+
+    conn = None
+
+    try:
+
+        conn = pymysql.connect(**DB_CONFIG)
+
+        yield conn
+
+    except Exception as e:
+
+        logger.error(f"DB 연결 오류: {e}")
+
+        raise
+
+    finally:
+
+        if conn:
+
+            conn.close()
+
+  
+  
+
+def get_candlestick_data(stock_names: List[str], data_type: str = 'minute') -> Dict[str, pd.DataFrame]:
+
+    """
+
+    여러 종목의 캔들스틱 데이터를 한번에 조회
+
+    Args:
+
+        stock_names: 조회할 종목명 리스트
+
+        data_type: 'minute' 또는 'daily'
+
+    Returns:
+
+        {종목명: DataFrame} 형태의 딕셔너리
+
+    """
+
+    if data_type not in ['minute', 'daily']:
+
+        raise ValueError("data_type은 'minute' 또는 'daily'여야 합니다")
+
+    table_name = f"{data_type}_candlestick"
+
+    results = {}
+
+    try:
+
+        with get_db_connection() as conn:
+
+            # 여러 종목을 한번에 조회 (더 효율적)
+
+            placeholders = ','.join(['%s'] * len(stock_names))
+
+            # 실제 컬럼명에 맞게 수정 필요 - 종목명, 체결시간 등
+
+            query = f"SELECT * FROM {table_name} WHERE 종목명 IN ({placeholders}) ORDER BY 종목명, 체결시간"
+
+            df = pd.read_sql(query, conn, params=stock_names)
+
+            if df.empty:
+
+                logger.warning(f"조회된 데이터가 없습니다. 종목: {stock_names}")
+
+                return {name: pd.DataFrame() for name in stock_names}
+
+            # 종목별로 분리
+
+            for stock_name in stock_names:
+
+                stock_df = df[df['종목명'] == stock_name].copy()
+
+                if not stock_df.empty:
+
+                    # 체결시간 컬럼을 인덱스로 설정 (실제 시간 컬럼명 확인 필요)
+
+                    if '체결시간' in stock_df.columns:
+
+                        stock_df.set_index('체결시간', inplace=True)
+
+                        stock_df.index = pd.to_datetime(stock_df.index)
+
+                    # 종목명 컬럼 제거 (불필요)
+
+                    if '종목명' in stock_df.columns:
+
+                        stock_df.drop('종목명', axis=1, inplace=True)
+
+                results[stock_name] = stock_df
+
+    except Exception as e:
+
+        logger.error(f"데이터 조회 오류: {e}")
+
+        raise
+
+    return results
+
+  
+
+def get_minute_data(stock_names: List[str]) -> Dict[str, pd.DataFrame]:
+
+    """분봉 데이터 조회"""
+
+    return get_candlestick_data(stock_names, 'minute')
+
+  
+
+def get_daily_data(stock_names: List[str]) -> Dict[str, pd.DataFrame]:
+
+    """일봉 데이터 조회"""
+
+    return get_candlestick_data(stock_names, 'daily')
+
+  
+
+def prepare_chart_payload(
+
+    raw: Dict[str, pd.DataFrame],
+
+    include_volume: bool = True,
+
+) -> Dict[str, Dict[str, List[Dict]]]:
+
+    """
+
+    raw: { 종목명: DataFrame(index=체결시간, columns=[시가, 고가, 저가, 현재가, 거래량, 거래대금]) }
+
+    include_volume: 거래량 히스토그램 시리즈 포함 여부
+
+    """
+
+    payload: Dict[str, Dict[str, List[Dict]]] = {}
+
+  
+
+    for name, df in raw.items():
+
+        if df.empty:
+
+            payload[name] = {"candlesticks": [], "volumes": [] if include_volume else None}
+
+            continue
+
+  
+
+        # 1) 인덱스(체결시간)를 컬럼으로
+
+        df = df.reset_index()
+
+        # 2) 시간 ISO 포맷으로 변환
+
+        df['time'] = df['체결시간'].dt.strftime('%Y-%m-%dT%H:%M:%S')
+
+  
+
+        # 3) 캔들용 리스트 생성
+
+        candlesticks = (
+
+            df[['time', '시가', '고가', '저가', '현재가']]
+
+            .rename(columns={
+
+                '시가': 'open',
+
+                '고가': 'high',
+
+                '저가': 'low',
+
+                '현재가': 'close',
+
+            })
+
+            .to_dict(orient='records')
+
+        )
+
+  
+
+        # 4) 거래량(히스토그램)용 리스트 생성 (옵션)
+
+        volumes = None
+
+        if include_volume:
+
+            volumes = (
+
+                df[['time', '거래량']]
+
+                .rename(columns={'거래량': 'value'})
+
+                .to_dict(orient='records')
+
+            )
+
+  
+
+        payload[name] = {
+
+            'candlesticks': candlesticks,
+
+            'volumes': volumes,
+
+        }
+
+  
+
+    return payload
+```
+
+이제 list인 flat_values를 가지고 db에서 query를 진행해야한다.
+
+get_candlestick_data()의 파라미터로 2가지가 들어가는데 종목명이 적힌 리스트(=flat_values) 와 data_type이다. 각 종목들마다. 분봉, 초봉, 일봉 등등 다양한 차트데이터들이 있고 나는 이를 db에서  다음과 같이 테이블로 분류하여 관리중이다.
+![[Pasted image 20250528114651.png]]
+이들을 전부 적절히 조회 하기 위하여  2가지를 파라미터로 갖는다.
+
+이 함수의 리턴값으로 다음과 같은 json이 반환된다. 
+그러나 자바스크립트에는 dataframe 자료형이 없다. 또한 프론트에서 차트를 바로 만들수 있게 데이터를 파싱하는 작업이 필요하다. 이를 백엔드에서 미리 처리하여 json으로 변환하여 프론트로 넘겨야한다.
+![[Pasted image 20250528115029.png]]
+
+prepare_chart_payload()함수를 통해 데이터 파싱을 진행한다.
+파라미터로 위의 딕셔너리와 volume을 포함할지 말지에 대한 boolean값 2가지를 갖는다.
+return으로 다음과 같은 json 데이터가 파싱되어 나온다.
+
+| ![[Pasted image 20250528115432.png]] | ![[Pasted image 20250528115946.png]] |
+| ------------------------------------ | ------------------------------------ |
+
+
+## javascript
+
+### 백엔드 통신 함수
+
+
+```javascript
+async function fetchDataFromBackend(value) {
+
+  const backendUrl = "http://localhost:8000/get_chart_data"; // FastAPI 엔드포인트 주소
+
+  
+
+  try {
+
+    const response = await fetch(backendUrl, {
+
+      method: "POST",
+
+      headers: {
+
+        "Content-Type": "application/json", // JSON 형식으로 데이터 전송
+
+      },
+
+      body: JSON.stringify({ value: value }), // 엑셀에서 가져온 값을 JSON 형태로 변환하여 전송
+
+    });
+
+  
+
+    if (!response.ok) {
+
+      // HTTP 상태 코드가 200-299 범위가 아닐 경우 오류 처리
+
+      const errorText = await response.text();
+
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+
+    }
+
+  
+
+    const data = await response.json(); // 백엔드로부터 받은 JSON 응답 파싱
+
+    console.log("백엔드로부터 받은 데이터:", data);
+
+    return data.chart_data; // 차트 데이터를 반환
+
+  } catch (error) {
+
+    console.error("백엔드 통신 오류:", error);
+
+    // 오류 발생 시 기본 데이터 또는 빈 데이터 반환
+
+    return { labels: [], values: [] };
+
+  }
+```
+
+fetchDataFromBackend함수의 리턴값인 data.chart_data(=chartData) 는 다음처럼 생겼다.
+![[Pasted image 20250528120741.png]]
+
+
+## dialog
+
+엑셀의 taskpane창은 차트를 보기에 작다. 수동으로 크기를 늘릴 수 있지만 화면의 1/3 수준까지 늘리는게 한계이다. 따라서 Office에서 제공하는 API로 새창의 띄우기로 했다.
+
+```javascript
+// 새로운 창(Dialog)에 차트를 렌더링하는 함수
+
+async function renderChartInDialog(data) {
+
+  chartDataForDialog = data;
+
+  
+
+  Office.context.ui.displayDialogAsync(
+
+    "https://localhost:3000/dialog.html",
+
+    { height: 75, width: 75, displayInIframe: false, promptBeforeOpen: false },
+
+    function (asyncResult) {
+
+      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+
+        console.error("다이얼로그 열기 실패: " + asyncResult.error.message);
+
+        openedChartDialog = null;
+
+        chartDataForDialog = null;
+
+      } else {
+
+        openedChartDialog = asyncResult.value;
+
+        console.log("다이얼로그 열림. Dialog로부터 준비 메시지 대기 중...");
+
+        openedChartDialog.addEventHandler(Office.EventType.DialogMessageReceived, processMessageFromChartDialog);
+
+        openedChartDialog.addEventHandler(Office.EventType.DialogEventReceived, processChartDialogEvent);
+
+      }
+
+    }
+
+  );
+
+}
+```
+
+
+Office객체의 displayDialogAsync 매서드는 office add-in에서 새 dialog를 열어주는 매서드이다.
+3개의 parameter를 갖고 그중 하나는 콜백함수로 dialog를 여는 비동기 작업이 완료된 후에 호출된다.
+이 콜백함수가 호출되면 asyncResult라는 객체가 생성되고 이 객체는 dialog에 대한 정보를 담고 있다. 
+
+```javascript
+// Dialog로부터 메시지를 수신하고 dialog로 데이터를 보내는 함수
+
+function processMessageFromChartDialog(arg) {
+
+  console.log("Taskpane: Message received from chart dialog.");
+
+  try {
+
+    const messageFromDialog = JSON.parse(arg.message);
+
+    console.log("Taskpane: Parsed message from dialog: ", messageFromDialog);
+
+  
+
+    if (messageFromDialog.type === "DIALOG_READY") {
+
+      console.log("Taskpane: Chart Dialog is ready. Sending chart data.");
+
+      if (openedChartDialog && chartDataForDialog) {
+
+        openedChartDialog.messageChild(JSON.stringify({ type: "CHART_DATA", payload: chartDataForDialog }));
+
+      } else {
+
+        console.error("Taskpane: Dialog object or chart data is missing when trying to send.");
+
+      }
+
+    } else if (messageFromDialog.type === "DIALOG_CLOSED_BY_BUTTON") {
+
+      console.log("Taskpane: Chart Dialog was closed by button click in dialog.");
+
+      if (openedChartDialog) {
+
+        openedChartDialog.close();
+
+        openedChartDialog = null;
+
+      }
+
+    }
+
+    // ... 기타 메시지 처리 ...
+
+  } catch (e) {
+
+    console.error("Taskpane: Error processing message from chart dialog:", e);
+
+  }
+
+}
+```
+이 함수에서 dialog로 부터 준비됐다는 메세지를 수신한후에 taskpane의 데이터를 messageChild라는 매서드를 이용해서 dialog로 보낸다.
+데이터를 주고받는 과정에서 JSON.parse 와 JSON.stringify 를 이용해 json 파싱하는 과정이 필요하다.
+
+dialog에서 chartData변수에 담긴 데이터는 다음과 같다.
+
+| ![[Pasted image 20250529113704.png]] |
+| ------------------------------------ |
+| ![[Pasted image 20250529113715.png]] |
+
+
+
+
+
+## 새로운창에 차트 렌더링하기
+
+taskpane.js에서 새로운 창을 띄우는 로직을 추가했다. 
+새로운 창은 data_viewer.html으로 taskpane폴더에 저장했고 실행했으나
+![[Pasted image 20250528222155.png]]
+다음과 같은 오류가 뜨면서 data_viewer.html을 찾는데 실패하였다.
+
+따라서 다음과 같은 코드를 webpack.config.js에 추가하였다.
+```javascript
+new HtmlWebpackPlugin({
+
+        filename: "data_viewer.html", // 빌드될 HTML 파일 이름
+
+        template: "./src/taskpane/data_viewer.html", // 원본 HTML 파일 경로
+
+        chunks: [], // 이 HTML 파일에 특정 JS 번들을 포함하지 않을 경우 비워둡니다.
+
+                    // 만약 data_viewer.js가 있다면 'data_viewer'를 추가할 수 있습니다.
+
+      })
+```
+
+이번에는 html은 제대로 뜨지만 ![[Pasted image 20250528222433.png]]
+데이터를 넘겨받지 못했다.
+
+sessionStorage를 이용해서 taskpane.js와 새로 열릴 창인 data_viewer.html 간의 데이터 통신을  구현하려 했으나, 두 파일간에 sessionStorage가 공유되지 않는것 같다.
+
+따라서 **서로 다른 프레임이나 창 간의 통신에 널리 사용되는 표준적인 방법** 인 postMessage를 활용하기로 했다. 
+

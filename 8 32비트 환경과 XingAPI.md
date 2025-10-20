@@ -1,0 +1,43 @@
+xing API of LS is only offered by python 32bit environment. 
+because of that I need to install Official 32-bit python from 
+[python.org](https://www.python.org/downloads/windows/)
+
+And I downloaded 32bit python at this direction
+```
+C:\Users\<username>\AppData\Local\Programs\Python\Python313-32
+C:\Users\<username>\AppData\Local\Programs\Python\Python313-32\python.exe
+```
+
+right after I made a virtual environment
+```
+& 'C:\Users\<username>\AppData\Local\Programs\Python\Python313-32\python.exe' -m venv py13_32
+```
+and activate it
+```
+.\py13_32\Scripts\Activate.ps1
+```
+
+
+xingAPI guide : https://www.ls-sec.co.kr/
+xingAPI COM guide : https://www.ls-sec.co.kr/apiguide/guide.jsp?cno=200
+
+![[Pasted image 20250619112043.png]]
+
+And I downloaded XingAPI at this direction.
+1. DevCenter.exe
+2. xingACE.exe
+![[Pasted image 20250619112346.png]]
+
+
+there are two .exe file at this direction.
+
+| ![[Pasted image 20250619112711.png]]                   | ![[Pasted image 20250619113115.png]] |
+| ------------------------------------------------------ | ------------------------------------ |
+| if you run these program then you can see these icons  | ![[Pasted image 20250619132048.png]] |
+
+
+
+
+
+
+

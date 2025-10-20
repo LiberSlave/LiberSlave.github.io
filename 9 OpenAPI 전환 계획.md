@@ -1,0 +1,14 @@
+openAPI guide : https://openapi.ls-sec.co.kr/howto-sample
+
+to do list : change folder name "MY OFFICE ADD-in" ->"my_office_add-in"
+
+I realized that I could build my project by using open api. I didn't need to build it by xingAPI which has COM object.
+when I use xingAPI then the process will be more complicated cause it could be built in only 32 bit python environment.
+So I decided that rebuild my application using websocket (wss protocol) in openAPI.
+
+![[Pasted image 20250620095231.png]]
+
+
+
+
+![[Pasted image 20250621090709.png]]
