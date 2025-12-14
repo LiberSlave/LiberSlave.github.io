@@ -1,44 +1,12 @@
 ﻿# LiberSlave.github.io
 
-- [1. 프론트백엔드 통신 구축](1.md)
-- [2. DB조회와 차트페이로드](2.md)
-- [3. ECharts 전환과 차트](3.md)
-- [4. LS OPEN API 파이프라인](4.md)
-- [5. GitHub 연동과 코드분석](5.md)
-- [6. Jules 협업 리팩토링 전략](6.md)
-- [7. 뉴스 시각화 파이프라인](7.md)
-- [8. 32비트 환경과 XingAPI](8.md)
-- [9. OpenAPI 전환 계획](9.md)
-- [10. DynamoDB 비용 분석](10.md)
-- [11. 토큰자동화와 Tasks 설정](11.md)
-- [12. MCP 설정과 도구 확장](12.md)
-- [13. 실시간 뉴스 웹소켓 흐름](13.md)
-- [14. 뉴스 SQL 쿼리 레시피](14.md)
-- [15. 매매 규칙 엔진 설계](15.md)
-- [16. CSV 인코딩과 뷰어](16.md)
-- [17. 주식캐시와 비동기 전략](17.md)
-- [18. 텔레그램 유저봇 분석](18.md)
-- [19. 주문가능금액 변화 실험](19.md)
-- [20. 브랜치 병합 절차](20.md)
-- [21. 실적공시 분석과 DART 활용](21.md)
-- [22. 아키텍처 문제 진단](22.md)
-- [23. 뉴스 데이터 모델 도식](23.md)
-- [24. 손익비 지표 설계](24.md)
-- [24_1. TF-IDF](24_1.md)
-- [25. EDA와 모델링 계획](25.md)
-- [26. 분류 모델 전처리 전략](26.md)
-- [27. TF-IDF와 BERT 전환 비교](27.md)
-- [28.실험](28.md)
-- [28_1.실험](28_1.md)
-- [29. 하이퍼파라미터 튜닝](29.md)
-- [30. MLflow](30.md)
-- [31. MLOps](31.md)
-- [32. 명명법](32.md)
-- [33. 데이터 불균형, 치우침](33.md)
-- [34. 과적합](34.md)
-- [35. 튜닝(분류)](35.md)
-- [36. BERT 전이학습](36.md)
-- [39. 라이브러리 설치 의존성 해결](39.md)
-- [40. 스태킹](40.md)
-- [41. tree, MLP, fine-tune](41.md)
-- [42. 깃허브 Jekyll](42.md)
+### 📋 프로젝트 요약 목록 (Project Summary)
+
+
+| 프로젝트명 (Project)                                        | 주요 기술 (Tech Stack)                          | 핵심 내용 (Description)                                                        | 링크                                                                                                        |
+| ------------------------------------------------------ | ------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| **📈 실시간 AI 자동매매 시스템**<br>(Real-time Trading Pipeline) | **Python**, FastAPI,<br>LightGBM, Office.js | 이종 데이터(뉴스/공시/시세)를 실시간 수집·분석하여 ML 예측 모델 기반으로 매매를 수행하는 **End-to-End 금융 플랫폼** | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2Foffice-add-in-trading)     |
+| **🧪 실험 데이터 전처리 자동화**<br>(Data Processing Automation)  | **VBA**, Excel Macro                        | 반복적인 실험 데이터 정제 작업을 매크로로 자동화하여 **작업 시간을 90% 단축**한 업무 효율화 도구                 | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2Fexcel-data-processing-vba) |
+| **📰 뉴스 스크래핑 & 분석기**<br>(News Analysis System)         | **Python**, Selenium,<br>BS4                | 비정형 뉴스 데이터를 수집/파싱하여 키워드를 추출하는 **ETL 파이프라인의 프로토타입**                         | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2FNewsScraping)              |
+| **🎥 비디오 레코딩 시스템**<br>(Video Recording App)            | **Python**, OpenCV,<br>PyQt                 | 실시간 영상 스트림을 캡처하고 저장하는 멀티미디어 처리 애플리케이션 (Vision Inspection 프로젝트의 전신)         | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2FVideoRecording)            |
+
