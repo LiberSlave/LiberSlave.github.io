@@ -8,7 +8,8 @@ title: Home
 
 ---
 
-🛠 Tech Stack
+## 🛠 Tech Stack
+
 Languages
 
 <img src="https://img.shields.io/badge/Python-3776AB?style=flat&amp;logo=Python&amp;logoColor=white" alt="Python">
@@ -39,17 +40,32 @@ Database & Cloud
 
 Tools & DevOps
 
+<img src="https://img.shields.io/badge/Visual_Studio_Code-007ACC?style=flat&logo=visual-studio-code&logoColor=white" alt="Visual Studio Code">
 <img src="https://img.shields.io/badge/Git-F05032?style=flat&amp;logo=git&amp;logoColor=white" alt="Git">
 <img src="https://img.shields.io/badge/GitHub-181717?style=flat&amp;logo=github&amp;logoColor=white" alt="GitHub">
+<img src="https://img.shields.io/badge/GitHub_Copilot-000000?style=flat&logo=githubcopilot&logoColor=white" alt="GitHub Copilot">
+<img src="https://img.shields.io/badge/Google_Gemini-8E75B2?style=flat&logo=googlegemini&logoColor=white" alt="Google Gemini 3.0">
+<img src="https://img.shields.io/badge/Claude-D97757?style=flat&logo=anthropic&logoColor=white" alt="Claude">
 
 ---
 
 ## 🚀 Projects
 
-| 프로젝트명 (Project)                                        | 주요 기술 (Tech Stack)                          | 핵심 내용 (Description)                                                        | 링크                                                                                                        |
-| ------------------------------------------------------ | ------------------------------------------- | -------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| **📈 실시간 AI 자동매매 시스템**<br>(Real-time Trading Pipeline) | **Python**, FastAPI,<br>skitlearn, Office.js, MySQL | 이종 데이터(뉴스/공시/시세)를 실시간 수집·분석하여 ML 예측 모델 기반으로 매매를 수행하는 **End-to-End 데이터분석 플랫폼** | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2Foffice-add-in-trading)     |
-| **🧪 실험 데이터 전처리 자동화**<br>(Data Processing Automation)  | **VBA**, Excel Macro                        | 반복적인 실험 데이터 정제 작업을 매크로로 자동화하여 **작업 시간을 90% 단축**한 업무 효율화 도구                 | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2Fexcel-data-processing-vba) |
-| **📰 뉴스 스크래핑 & 분석기**<br>(News Analysis System)         | **Python**, Selenium,<br>BS4                | 비정형 뉴스 데이터를 수집/파싱하여 키워드를 추출하는 **ETL 파이프라인의 프로토타입**                         | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2FNewsScraping)              |
-| **🎥 비디오 레코딩 시스템**<br>(Video Recording App)            | **Python**, OpenCV,<br>PyQt                 | 실시간 영상 스트림을 캡처하고 저장하는 멀티미디어 처리 애플리케이션 (Vision Inspection 프로젝트의 전신)         | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2FVideoRecording)            |
 
+
+
+### 2025
+| 프로젝트명 (Project) | 주요 기술 (Tech Stack) | 핵심 내용 (Description) | 링크 |
+| --- | --- | --- | --- |
+| **📈 실시간 AI 자동매매 시스템**<br>(Real-time Trading Pipeline) | **Python**, FastAPI,<br>skitlearn, Office.js, MySQL | 이종 데이터(뉴스/공시/시세)를 실시간 수집·분석하여 ML 예측 모델 기반으로 매매를 수행하는 **End-to-End 데이터분석 플랫폼** | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2Foffice-add-in-trading) |
+
+### 2024
+| 프로젝트명 (Project) | 주요 기술 (Tech Stack) | 핵심 내용 (Description) | 링크 |
+| --- | --- | --- | --- |
+| **🧪 실험 데이터 전처리 자동화**<br>(Data Processing Automation)<br>*(2024.12)* | **VBA**, Excel Macro | 반복적인 실험 데이터 정제 작업을 매크로로 자동화하여 **작업 시간을 90% 단축**한 업무 효율화 도구 | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2Fexcel-data-processing-vba) |
+
+### 2021 ~ 2024
+| 프로젝트명 (Project) | 주요 기술 (Tech Stack) | 핵심 내용 (Description) | 링크 |
+| --- | --- | --- | --- |
+| **📰 뉴스 스크래핑 & 분석기**<br>(News Analysis System) | **Python**, Selenium,<br>BS4 | 비정형 뉴스 데이터를 수집/파싱하여 키워드를 추출하는 **ETL 파이프라인의 프로토타입** | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2FNewsScraping) |
+| **🎥 비디오 레코딩 시스템**<br>(Video Recording App) | **Python**, OpenCV,<br>PyQt | 실시간 영상 스트림을 캡처하고 저장하는 멀티미디어 처리 애플리케이션 (Vision Inspection 프로젝트의 전신) | [🔗](https://www.google.com/url?sa=E&q=https%3A%2F%2Fgithub.com%2FLiberSlave%2FVideoRecording) |
