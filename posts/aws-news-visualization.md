@@ -265,4 +265,4 @@ chart.setOption(option); // 이 시점에 화면에 그래프가 짠! 하고 나
 
 당일 핫한 뉴스 키워드를 엑셀 taskpane에 시각화 한 모습
 
-![[Pasted image 20251222110916.png]]
+![Pasted-image-20250618153133](Pasted-image-20250618153133.png)
