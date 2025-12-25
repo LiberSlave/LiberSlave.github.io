@@ -12,3 +12,13 @@ defaults:
       path: "" # 저장소 전체의 모든 파일에 적용
     values:
       layout: "default"
+
+
+# ▼ 이 부분이 핵심입니다! (복사해서 붙여넣으세요)
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
