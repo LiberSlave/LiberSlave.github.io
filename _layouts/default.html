@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+  {% include head.html %}
+  <body>
+    {% include header.html %}
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        {{ content }}
+      </div>
+    </main>
+    {% include footer.html %}
+
+    <!-- ▼ 여기서부터 Mermaid 다이어그램 스크립트입니다 ▼ -->
+    <script type="module">
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({ startOnLoad: false }); // 자동 로드 끄기 (수동 변환 위해)
+
+      document.addEventListener('DOMContentLoaded', function () {
+        // 1. "language-mermaid" 클래스가 붙은 코드 블록을 찾습니다.
+        const mermaidBlocks = document.querySelectorAll('.language-mermaid');
+        
+        mermaidBlocks.forEach((block) => {
+          // 2. 코드 블록의 텍스트(그래프 내용)만 가져옵니다.
+          const graphDefinition = block.innerText || block.textContent;
+          
+          // 3. 새로운 div를 만들고 mermaid 클래스를 붙입니다.
+          const div = document.createElement('div');
+          div.className = 'mermaid';
+          div.textContent = graphDefinition;
+          
+          // 4. 기존 코드 블록(회색 박스)을 새로운 div(그림)로 교체합니다.
+          block.parentNode.replaceChild(div, block);
+        });
+
+        // 5. 이제 변환된 div들을 그림으로 그립니다.
+        mermaid.run();
+      });
+    </script>
+  </body>
+</html>
