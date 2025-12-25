@@ -109,6 +109,7 @@ graph TD
 - **라이브러리:** `Konlpy` (한국어 정보처리 패키지)의 `Okt` (Open Korean Text) 형태소 분석기 사용.
 - **로직:**
     1. `Okt.nouns()` 함수를 사용하여 텍스트에서 **명사(Noun)**만 추출합니다.
+
 ```python
     # 형태소(명사) 추출 함수
     def tokenize_titles(df):
@@ -118,7 +119,9 @@ graph TD
             all_tokens.extend(tokens)
         return all_tokens
 ```
+
     1. 의미 없는 단어(길이가 1인 단어등)를 제거하는 전처리 과정을 거칩니다.
+
 ``` python
 # ...existing code...
     # df1 (오늘)의 단어 빈도 분석
@@ -132,6 +135,7 @@ graph TD
     }
 # ...existing code...
 ```
+
 ##### Step 3: 빈도수 분석 (Frequency Counting)
 
 - **파일:** `AWS_news.py`
@@ -265,4 +269,5 @@ chart.setOption(option); // 이 시점에 화면에 그래프가 짠! 하고 나
 
 당일 핫한 뉴스 키워드를 엑셀 taskpane에 시각화 한 모습
 
-![Pasted-image-20250618153133](Pasted-image-20250618153133.png)
+
+![Pasted-image-20250618153133](../images/Pasted-image-20250618153133.png)
